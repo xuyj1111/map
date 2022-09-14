@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Title</title>
+    <link rel="stylesheet" href="../style/map.css" />
+    <link rel="stylesheet" href="../style/search.css" />
+    <link rel="stylesheet" href="../style/info.css" />
+    <link
+      href="http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <section id="menu"></section>
+
+    <section id="main">
+      <canvas id="map" width="1200" height="800"> </canvas>
+    </section>
+
+    <section id="operation">
+
+      <section class="search">
+        <form>
+          <input type="text" placeholder="请输入设备编号" />
+          <button type="submit"></button>
+        </form>
+      </section>
+
+      <section class="info">
+        <form>
+          <input class="message" type="text" placeholder="编号" />
+          <input class="message" type="text" placeholder="名称" />
+          <input class="coordinate" type="text" placeholder="坐标1.x" />
+          <input class="coordinate" type="text" placeholder="坐标1.y" />
+          <input class="coordinate" type="text" placeholder="坐标2.x" />
+          <input class="coordinate" type="text" placeholder="坐标2.y" />
+          <input class="coordinate" type="text" placeholder="坐标3.x" />
+          <input class="coordinate" type="text" placeholder="坐标3.y" />
+          <input class="coordinate" type="text" placeholder="坐标4.x" />
+          <input class="coordinate" type="text" placeholder="坐标4.y" />
+          <button type="submit">保存</button>
+        </form>
+      </section>
+
+      <canvas id="thumbnail" width="180" height="120"> </canvas>
+
+      <!-- <button onclick="bigger()">+</button>
+      <button onclick="smaller()">-</button> -->
+    </section>
+  </body>
+
+  <script src="../js/map.js"></script>
+</html>
