@@ -1,5 +1,9 @@
-var map = document.getElementById("map");
+// 有问题，暂时存一下
+var map = document.getElementById("main").getElementsByTagName("canvas");
 var mapContext = map.getContext("2d");
+
+var thumbnail = document.getElementById("operation").getElementsByTagName("canvas");
+var thumbnailContext = thumbnail.getContext("2d");
 
 var graphicWidth = 5;
 var graphicHeight = 5;
@@ -12,7 +16,7 @@ window.onload = init();
 function init() {
     map.setAttribute("width", width);
     map.setAttribute("height", height);
-    // draw();
+    draw();
 
 }
 
@@ -39,18 +43,57 @@ function smaller() {
 function draw() {
     mapContext.beginPath();
     mapContext.fillStyle = "black";
-    for (var i = 0; i < 100; i++) {
-        for (var j = 0; j < 50; j++) {
-            mapContext.fillRect(
-                10 + (graphicWidth + interval) * i,
-                10 + (graphicHeight + interval) * j,
-                graphicWidth,
-                graphicHeight
-            );
-        }
-    }
+    mapContext.strokeRect(
+        100,
+        100,
+        100,
+        100
+    );
+    mapContext.strokeRect(
+        200,
+        100,
+        50,
+        50
+    );
     mapContext.closePath();
     mapContext.fillStyle = "rgb(255,255,255)";
     mapContext.fill();
+
+
+
+    thumbnailContext.beginPath();
+    thumbnailContext.strokeStyle = "black";
+    thumbnailContext.strokeRect(
+        100/6.66,
+        100/6.66,
+        100/6.66,
+        100/6.66
+    );
+    thumbnailContext.strokeRect(
+        200/6.66,
+        100/6.66,
+        50/6.66,
+        50/6.66
+    );
+
+
+    thumbnailContext.strokeStyle = "blue";
+    thumbnailContext.strokeRect(
+        100/6.66,
+        100/6.66,
+        100/6.66,
+        100/6.66
+    );
+    thumbnailContext.strokeRect(
+        0,
+        0,
+        180,
+        120
+    );
+
+    thumbnailContext.closePath();
+    thumbnailContext.fillStyle = "rgb(255,255,255)";
+    thumbnailContext.fill();
+
 }
 

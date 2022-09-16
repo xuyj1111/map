@@ -17,6 +17,7 @@ body {
     height: 100%;
     width: 50px;
 }
+
 #main {
     height: 100%;
     width: calc(100vw - 300px);
@@ -28,32 +29,34 @@ body {
     background-color: #ffffff;
     opacity: 1;
 }
+
 #operation {
     height: 100%;
     width: 250px;
 
-
     overflow-y: scroll;
-
-    /* background: linear-gradient(135deg, #cacaca 0%, #cacaca 5%,transparent 5%, transparent 10%, #cacaca 10%, #cacaca 15%,transparent 15%,transparent 20%, #cacaca 20%, #cacaca 25%,transparent 25%,transparent 30%, #cacaca 30%, #cacaca 35%,transparent 35%,transparent 40%, #cacaca 40%, #cacaca 45%,transparent 45%,transparent 50%, #cacaca 50%, #cacaca 55%,transparent 55%,transparent 60%, #cacaca 60%, #cacaca 65%,transparent 65%,transparent 70%, #cacaca 70%, #cacaca 75%,transparent 70%,transparent 80%, #cacaca 80%, #cacaca 85%,transparent 85%,transparent 90%, #cacaca 90%, #cacaca 95%,transparent 95%);
-    background-size: 1em 1em; */
-    background-color: rgb(156, 156, 156);
+    background-color:white;
     opacity: 1;
 }
 
-#map {
-    /* background: white; */
+#menu img {
+    margin: 10px 9px;
+    flex-direction: column;
+}
 
-    background: radial-gradient(circle, #acacac 10%, transparent 11%),radial-gradient(circle at bottom left, #acacac 5%, transparent 6%),radial-gradient(circle at bottom right, #acacac 5%, transparent 6%),radial-gradient(circle at top left, #acacac 5%, transparent 6%),radial-gradient(circle at top right, #acacac 5%, transparent 6%);
-    background-size: 1em 1em;
-    background-color: #f3f3f3;
-    opacity: 1;
+#main canvas {
+    background: white;
 
     border: 2px solid rgb(153, 153, 153);
 }
-#thumbnail {
+
+#operation canvas {
     background-color:white;
     
     display: block;
     margin: auto;
+    border: 1px solid rgb(0, 0, 0);
+}
+#operation .button {
+    margin: 0 30px;
 }

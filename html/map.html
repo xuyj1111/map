@@ -12,41 +12,55 @@
     />
   </head>
   <body>
-    <section id="menu"></section>
-
-    <section id="main">
-      <canvas id="map" width="1200" height="800"> </canvas>
+    <!-- 菜单栏 -->
+    <section id="menu">
+      <img class="home" src="../resource/home.png" onclick="" />
+      <img class="site" src="../resource/assy.png" onclick="" />
+      <img class="site" src="../resource/gear.png" onclick="" />
+      <img class="site" src="../resource/muscle.png" onclick="" />
+      <img class="site" src="../resource/rice.png" onclick="" />
+      <img class="site" src="../resource/zan.png" onclick="" />
+      <img class="site" src="../resource/email.png" onclick="" />
+      <img class="site" src="../resource/car.png" onclick="" />
     </section>
 
-    <section id="operation">
+    <!-- 主体内容 -->
+    <section id="main">
+      <canvas width="1200" height="800"> </canvas>
+    </section>
 
-      <section class="search">
+    <!-- 操作栏 -->
+    <section id="operation">
+      <!-- 搜索框 -->
+      <div class="search">
         <form>
           <input type="text" placeholder="请输入设备编号" />
           <button type="submit"></button>
         </form>
-      </section>
+      </div>
 
-      <section class="info">
+      <!-- 信息区域 -->
+      <div class="info">
         <form>
-          <input class="message" type="text" placeholder="编号" />
-          <input class="message" type="text" placeholder="名称" />
-          <input class="coordinate" type="text" placeholder="坐标1.x" />
-          <input class="coordinate" type="text" placeholder="坐标1.y" />
-          <input class="coordinate" type="text" placeholder="坐标2.x" />
-          <input class="coordinate" type="text" placeholder="坐标2.y" />
-          <input class="coordinate" type="text" placeholder="坐标3.x" />
-          <input class="coordinate" type="text" placeholder="坐标3.y" />
-          <input class="coordinate" type="text" placeholder="坐标4.x" />
-          <input class="coordinate" type="text" placeholder="坐标4.y" />
-          <button type="submit">保存</button>
+          <input type="text" placeholder="设备编号" />
+          <input type="text" placeholder="工位号(除assy, 其他不用填)" />
+          <input type="text" placeholder="坐标x" />
+          <input type="text" placeholder="坐标y" />
+          <input type="text" placeholder="长度" />
+          <input type="text" placeholder="宽度" />
+          <button type="submit">添加｜保存</button>
+          <button type="submit">删除</button>
         </form>
-      </section>
+      </div>
 
-      <canvas id="thumbnail" width="180" height="120"> </canvas>
+      <!-- 按钮 -->
+      <div class="button">
+        <button onclick="bigger()">+</button>
+        <button onclick="smaller()">-</button>
+      </div>
 
-      <!-- <button onclick="bigger()">+</button>
-      <button onclick="smaller()">-</button> -->
+      <!-- 缩略图 -->
+      <canvas width="180" height="120"> </canvas>
     </section>
   </body>
 
