@@ -26,7 +26,7 @@
 
     <!-- 主体内容 -->
     <section id="main">
-      <canvas width="1200" height="800"> </canvas>
+      <canvas width="800" height="600"> </canvas>
     </section>
 
     <!-- 操作栏 -->
@@ -42,14 +42,14 @@
       <!-- 信息区域 -->
       <div class="info">
         <form>
-          <input type="text" placeholder="设备编号" />
-          <input type="text" placeholder="工位号(除assy, 其他不用填)" />
-          <input type="text" placeholder="坐标x" />
-          <input type="text" placeholder="坐标y" />
-          <input type="text" placeholder="长度" />
-          <input type="text" placeholder="宽度" />
-          <button type="submit">添加｜保存</button>
-          <button type="submit">删除</button>
+          <input type="text" name = "id" placeholder="设备编号" />
+          <input type="text" name = "tag" placeholder="工位号(除assy, 其他不用填)" />
+          <input type="text" name = "coordX" placeholder="坐标x" />
+          <input type="text" name = "coordY" placeholder="坐标y" />
+          <input type="text" name = "width" placeholder="宽度" />
+          <input type="text" name = "height" placeholder="高度" />
+          <input type="button" value="save" onclick="mySubmit(this)"/>
+          <input type="button" value="delete" onclick="mySubmit(this)"/>
         </form>
       </div>
 
@@ -57,6 +57,7 @@
       <div class="button">
         <button onclick="bigger()">+</button>
         <button onclick="smaller()">-</button>
+        <span></span>
       </div>
 
       <!-- 缩略图 -->

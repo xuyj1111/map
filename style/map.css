@@ -39,7 +39,7 @@ body {
     opacity: 1;
 }
 
-#menu img {
+#menu .site {
     margin: 10px 9px;
     flex-direction: column;
 }
