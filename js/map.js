@@ -13,24 +13,47 @@ var width = 800;
 var height = 600;
 var per = 20;
 var shapes = [];
+var choose;
 
 window.onload = init();
+
+{
+    map.addEventListener('click', function (e) {
+        p = getEventPosition(e);
+        draw(p);
+    }, false);
+}
 
 function init() {
     map.setAttribute("width", width);
     map.setAttribute("height", height);
     perText.innerText = per + "%";
-    draw();
+    drawAll();
 }
 
 function mySubmit(type) {
     var formData = new FormData(form);
-    if (type.value == "save" && saveValidation(formData) == true) {
+    if (type.value == "save" && saveValidation(formData)) {
         doSave(formData);
         form.reset();
-    } else if (type.value == "delete" && deleteValidation(formData == true)) {
-        doDelete(formData);
+    } else if (type.value == "delete" && deleteValidation(formData) && window.confirm("是否删除选中的设备？")) {
+        shapes.splice(choose, 1);
         form.reset();
+        mapContext.clearRect(0, 0, map.width, map.height);
+        thumbnailContext.clearRect(0, 0, thumbnail.width, thumbnail.height);
+        choose = null;
+    } else if (type.value == "deleteLast" && window.confirm("是否删除上次添加的设备？")) {
+        shapes.pop();
+        form.reset();
+        mapContext.clearRect(0, 0, map.width, map.height);
+        thumbnailContext.clearRect(0, 0, thumbnail.width, thumbnail.height);
+        choose = null;
+    } else if (type.value == "deleteAll" && window.confirm("是否删除所有设备？")) {
+        shapes = [];
+        form.reset();
+        mapContext.clearRect(0, 0, map.width, map.height);
+        thumbnailContext.clearRect(0, 0, thumbnail.width, thumbnail.height);
+        choose = null;
     }
     init();
 }
@@ -71,11 +94,14 @@ function saveValidation(formData) {
 }
 
 function deleteValidation(formData) {
-
+    if (choose == null) {
+        window.alert("请选中一个设备");
+        return false;
+    }
+    return true;
 }
 
 function doSave(formData) {
-    console.log(shapes.length);
     var newShape = new Object();
     newShape["id"] = formData.get("id");
     if (!isEmpty(formData.get("tag"))) {
@@ -87,10 +113,6 @@ function doSave(formData) {
     newShape["height"] = formData.get("height");
     shapes[shapes.length] = newShape;
     console.log(shapes);
-}
-
-function doDelete(formData) {
-
 }
 
 function bigger() {
@@ -113,37 +135,89 @@ function smaller() {
     }
 }
 
-function draw() {
-    mapContext.fillStyle = "black";
-    thumbnailContext.strokeStyle = "black";
+function getEventPosition(ev) {
+    var x, y;
+    x = ev.offsetX;
+    y = ev.offsetY;
+    return { x: x, y: y };
+}
 
+function draw(p) {
+    var multiple = (1.0 + 0.05 * per);
+    var formData = new FormData(form);
+    choose = null;
+
+    mapContext.strokeStyle = "black";
+    mapContext.clearRect(0, 0, map.width, map.height);
+    thumbnailContext.clearRect(0, 0, thumbnail.width, thumbnail.height);
+    shapes.forEach(function (v, i) {
+        mapContext.beginPath();
+        mapContext.rect(v.coordX * multiple, v.coordY * multiple, v.width * multiple, v.height * multiple);
+        thumbnailContext.beginPath();
+        thumbnailContext.rect(v.coordX * 0.45, v.coordY * 0.4, v.width * 0.45, v.height * 0.4);
+        if (p && mapContext.isPointInPath(p.x, p.y)) {
+            choose = i;
+            mapContext.fillStyle = "black";
+            mapContext.fill();
+            thumbnailContext.fillStyle = "black";
+            thumbnailContext.fill();
+
+            form.children[0].value = shapes[i]["id"];
+            if (!isEmpty(shapes[i]["tag"])) {
+                form.children[1].value = shapes[i]["tag"];
+            }
+            form.children[2].value = shapes[i]["coordX"];
+            form.children[3].value = shapes[i]["coordY"];
+            form.children[4].value = shapes[i]["width"];
+            form.children[5].value = shapes[i]["height"];
+        } else {
+            mapContext.stroke();
+            thumbnailContext.stroke();
+        }
+    });
+    if (choose == null) {
+        form.reset();
+    }
+}
+
+function drawAll() {
+    mapContext.strokeStyle = "black";
+    thumbnailContext.strokeStyle = "black";
     var multiple = (1.0 + 0.05 * per);
     for (var i = 0; i < shapes.length; i++) {
         mapContext.beginPath();
         thumbnailContext.beginPath();
-        mapContext.strokeRect(
+        mapContext.rect(
             shapes[i]["coordX"] * multiple,
             shapes[i]["coordY"] * multiple,
             shapes[i]["width"] * multiple,
             shapes[i]["height"] * multiple
         );
-        thumbnailContext.strokeRect(
+        thumbnailContext.rect(
             shapes[i]["coordX"] * 0.45,
             shapes[i]["coordY"] * 0.4,
             shapes[i]["width"] * 0.45,
             shapes[i]["height"] * 0.4
         );
+        if (i == choose) {
+            mapContext.fillStyle = "black";
+            mapContext.fill();
+            thumbnailContext.fillStyle = "black";
+            thumbnailContext.fill();
+        } else {
+            mapContext.stroke();
+            thumbnailContext.stroke();
+        }
     }
 
-    thumbnailContext.beginPath();
-    thumbnailContext.strokeStyle = "blue";
-    thumbnailContext.strokeRect(
-        0,
-        0,
-        180,
-        120
-    );
-
+    // thumbnailContext.beginPath();
+    // thumbnailContext.strokeStyle = "blue";
+    // thumbnailContext.strokeRect(
+    //     0,
+    //     0,
+    //     180,
+    //     120
+    // );
 }
 
 function isEmpty(str) {
