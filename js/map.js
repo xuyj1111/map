@@ -64,6 +64,8 @@ function mySubmit(type) {
 function saveValidation(formData) {
     if (isEmpty(formData.get("id"))) {
         window.alert("请输入设备编号");
+    } else if (isEmpty(formData.get("name"))) {
+        window.alert("请输入设备名");
     } else if (isEmpty(formData.get("coordX"))) {
         window.alert("请输入坐标x");
     } else if (isEmpty(formData.get("coordY"))) {
@@ -107,6 +109,7 @@ function deleteValidation(formData) {
 function doSave(formData) {
     var newShape = new Object();
     newShape["id"] = formData.get("id");
+    newShape["name"] = formData.get("name");
     if (!isEmpty(formData.get("tag"))) {
         newShape["tag"] = formData.get("tag");
     }
@@ -170,13 +173,14 @@ function draw(p) {
             thumbnailContext.fill();
 
             form.children[0].value = shapes[i]["id"];
+            form.children[1].value = shapes[i]["name"];
             if (!isEmpty(shapes[i]["tag"])) {
-                form.children[1].value = shapes[i]["tag"];
+                form.children[2].value = shapes[i]["tag"];
             }
-            form.children[2].value = shapes[i]["coordX"];
-            form.children[3].value = shapes[i]["coordY"];
-            form.children[4].value = shapes[i]["width"];
-            form.children[5].value = shapes[i]["height"];
+            form.children[3].value = shapes[i]["coordX"];
+            form.children[4].value = shapes[i]["coordY"];
+            form.children[5].value = shapes[i]["width"];
+            form.children[6].value = shapes[i]["height"];
         } else {
             mapContext.stroke();
             thumbnailContext.stroke();
