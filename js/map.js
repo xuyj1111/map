@@ -36,6 +36,9 @@ function mySubmit(type) {
     if (type.value == "save" && saveValidation(formData)) {
         doSave(formData);
         form.reset();
+        mapContext.clearRect(0, 0, map.width, map.height);
+        thumbnailContext.clearRect(0, 0, thumbnail.width, thumbnail.height);
+        choose = null;
     } else if (type.value == "delete" && deleteValidation(formData) && window.confirm("是否删除选中的设备？")) {
         shapes.splice(choose, 1);
         form.reset();
@@ -71,11 +74,11 @@ function saveValidation(formData) {
         window.alert("请输入高度");
     } else {
         for (var i = 0; i < shapes.length; i++) {
-            if (shapes[i]["id"] == formData.get("id")) {
+            if (shapes[i]["id"] == formData.get("id") && choose == null) {
                 window.alert("该设备编号已存在");
                 return false;
             }
-            if (!isEmpty(formData.get("tag")) && shapes[i]["tag"] == formData.get("tag")) {
+            if (!isEmpty(formData.get("tag")) && shapes[i]["tag"] == formData.get("tag") && choose == null) {
                 window.alert("该工位号已存在");
                 return false;
             }
@@ -111,7 +114,11 @@ function doSave(formData) {
     newShape["coordY"] = formData.get("coordY");
     newShape["width"] = formData.get("width");
     newShape["height"] = formData.get("height");
-    shapes[shapes.length] = newShape;
+    if (choose == null) {
+        shapes[shapes.length] = newShape;
+    } else {
+        shapes[choose] = newShape;
+    }
     console.log(shapes);
 }
 
