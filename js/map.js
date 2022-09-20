@@ -77,8 +77,10 @@ function saveValidation(formData) {
     } else {
         for (var i = 0; i < shapes.length; i++) {
             if (shapes[i]["id"] == formData.get("id") && choose == null) {
-                window.alert("该设备编号已存在");
-                return false;
+                if (shapes[i]["tag"] == formData.get("tag") || (isEmpty(shapes[i]["tag"]) && isEmpty(formData.get("tag")))) {
+                    window.alert("该设备编号和工位号已存在");
+                    return false;
+                }
             }
             if (!isEmpty(formData.get("tag")) && shapes[i]["tag"] == formData.get("tag") && choose == null) {
                 window.alert("该工位号已存在");
@@ -174,9 +176,7 @@ function draw(p) {
 
             form.children[0].value = shapes[i]["id"];
             form.children[1].value = shapes[i]["name"];
-            if (!isEmpty(shapes[i]["tag"])) {
-                form.children[2].value = shapes[i]["tag"];
-            }
+            form.children[2].value = isEmpty(shapes[i]["tag"]) ? null : shapes[i]["tag"];
             form.children[3].value = shapes[i]["coordX"];
             form.children[4].value = shapes[i]["coordY"];
             form.children[5].value = shapes[i]["width"];
