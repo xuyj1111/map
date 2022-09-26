@@ -4,6 +4,8 @@ var thumbnail = document.getElementById("operation").getElementsByTagName("canva
 var thumbnailContext = thumbnail.getContext("2d");
 var perText = document.getElementById("operation").getElementsByClassName("button")[0].getElementsByTagName("span")[0];
 var form = document.getElementsByClassName("info")[0].getElementsByTagName("form")[0];
+var mapJson = document.getElementsByClassName("import")[0].getElementsByTagName("input")[0];
+var searchId = document.getElementsByClassName("search")[0].getElementsByTagName("form")[0].getElementsByTagName("input")[0];
 
 var minWidth = 400;
 var minHeight = 300;
@@ -78,12 +80,12 @@ function saveValidation(formData) {
         for (var i = 0; i < shapes.length; i++) {
             if (shapes[i]["id"] == formData.get("id") && choose == null) {
                 if (shapes[i]["tag"] == formData.get("tag") || (isEmpty(shapes[i]["tag"]) && isEmpty(formData.get("tag")))) {
-                    window.alert("该设备编号和工位号已存在");
+                    window.alert("该设备编号和工位号已存在, 编号[" + formData.get("id") + "] 工位号[" + formData.get("tag") + "]");
                     return false;
                 }
             }
             if (!isEmpty(formData.get("tag")) && shapes[i]["tag"] == formData.get("tag") && choose == null) {
-                window.alert("该工位号已存在");
+                window.alert("该工位号[" + formData.get("tag") + "]已存在");
                 return false;
             }
         }
@@ -93,6 +95,70 @@ function saveValidation(formData) {
         }
         if (parseInt(formData.get("coordY")) + parseInt(formData.get("height")) > 300) {
             window.alert("坐标y加高度不可超过300");
+            return false;
+        }
+        return true;
+    }
+    return false;
+}
+
+function search() {
+    for (var i = 0; i < shapes.length; i++) {
+        if (shapes[i]["id"] == searchId.value) {
+            choose = i;
+            mapContext.clearRect(0, 0, map.width, map.height);
+            thumbnailContext.clearRect(0, 0, thumbnail.width, thumbnail.height);
+            init();
+            form.children[0].value = shapes[i]["id"];
+            form.children[1].value = shapes[i]["name"];
+            form.children[2].value = isEmpty(shapes[i]["tag"]) ? null : shapes[i]["tag"];
+            form.children[3].value = shapes[i]["coordX"];
+            form.children[4].value = shapes[i]["coordY"];
+            form.children[5].value = shapes[i]["width"];
+            form.children[6].value = shapes[i]["height"];
+            return;
+        }
+    }
+    choose = null;
+    mapContext.clearRect(0, 0, map.width, map.height);
+    thumbnailContext.clearRect(0, 0, thumbnail.width, thumbnail.height);
+    init();
+    form.reset();
+    window.alert("没有此编号的设备");
+}
+
+function importValidation(data, num) {
+    if (isEmpty(data["id"])) {
+        window.alert("第" + num + "个！请输入设备编号");
+    } else if (isEmpty(data["name"])) {
+        window.alert("第" + num + "个！请输入设备名");
+    } else if (isEmpty(data["coordX"])) {
+        window.alert("第" + num + "个！请输入坐标x");
+    } else if (isEmpty(data["coordY"])) {
+        window.alert("第" + num + "个！请输入坐标y");
+    } else if (isEmpty(data["width"])) {
+        window.alert("第" + num + "个！请输入宽度");
+    } else if (isEmpty(data["height"])) {
+        window.alert("第" + num + "个！请输入高度");
+    } else {
+        for (var i = 0; i < shapes.length; i++) {
+            if (shapes[i]["id"] == data["id"] && choose == null) {
+                if (shapes[i]["tag"] == data["tag"] || (isEmpty(shapes[i]["tag"]) && isEmpty(data["tag"]))) {
+                    window.alert("该设备编号和工位号已存在, 编号[" + data["id"] + "] 工位号[" + data["tag"] + "]");
+                    return false;
+                }
+            }
+            if (!isEmpty(data["tag"]) && shapes[i]["tag"] == data["tag"] && choose == null) {
+                window.alert("该工位号[" + data["tag"] + "]已存在");
+                return false;
+            }
+        }
+        if (parseInt(data["coordX"]) + parseInt(data["width"]) > 400) {
+            window.alert("编号[" + data["id"] + "] 坐标x加宽度不可超过400");
+            return false;
+        }
+        if (parseInt(data["coordY"]) + parseInt(data["height"]) > 300) {
+            window.alert("编号[" + data["id"] + "] 坐标y加高度不可超过300");
             return false;
         }
         return true;
@@ -125,6 +191,28 @@ function doSave(formData) {
         shapes[choose] = newShape;
     }
     console.log(shapes);
+    // var dataJSON = JSON.stringify(shapes);
+    // console.log("json:" + dataJSON);
+}
+
+function importShapes() {
+    try {
+        var jsonObj = JSON.parse(mapJson.value);
+        shapes = [];
+        for (var i = 0; i < jsonObj.length; i++) {
+            if (!importValidation(jsonObj[i], i + 1)) {
+                return;
+            }
+            shapes[shapes.length] = jsonObj[i];
+        }
+    } catch (e) {
+        window.alert(e);
+    } finally {
+        mapContext.clearRect(0, 0, map.width, map.height);
+        thumbnailContext.clearRect(0, 0, thumbnail.width, thumbnail.height);
+        choose = null;
+        init();
+    }
 }
 
 function bigger() {

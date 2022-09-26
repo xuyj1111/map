@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="../style/map.css" />
     <link rel="stylesheet" href="../style/search.css" />
     <link rel="stylesheet" href="../style/info.css" />
+    <link rel="stylesheet" href="../style/import.css" />
     <link
       href="http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"
       rel="stylesheet"
@@ -35,7 +36,7 @@
       <div class="search">
         <form>
           <input type="text" placeholder="请输入设备编号" />
-          <button type="submit"></button>
+          <button type="button" onclick="search()"></button>
         </form>
       </div>
 
@@ -58,6 +59,12 @@
           <input type="button" value="deleteLast" onclick="mySubmit(this)" />
           <input type="button" value="deleteAll" onclick="mySubmit(this)" />
         </form>
+      </div>
+
+      <!-- 导入地图 -->
+      <div class="import">
+        <input type="text" placeholder="地图数据" />
+        <button type="button" onclick="importShapes()">导入</button>
       </div>
 
       <!-- 按钮 -->
