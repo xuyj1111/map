@@ -7,22 +7,31 @@ var form = document.getElementsByClassName("info")[0].getElementsByTagName("form
 var mapJson = document.getElementsByClassName("import")[0].getElementsByTagName("input")[0];
 var searchId = document.getElementsByClassName("search")[0].getElementsByTagName("form")[0].getElementsByTagName("input")[0];
 
+// 画布最小长宽，即0%
 var minWidth = 580;
 var minHeight = 380;
+// 画布最大长宽，即100%
 var maxWidth = 3480;
 var maxHeight = 2280;
+// 画布初始长宽
 var width = 870;
 var height = 570;
+// 画布比例，初始10%
 var per = 10;
+// 所有的设备
 var shapes = [];
+// 选中设备的下标，未选中为null
 var choose;
 
 window.onload = init();
 
+// 给画布添加“点击”事件，只执行一次
 {
     map.addEventListener('click', function (e) {
-        p = getEventPosition(e);
-        draw(p);
+        var x, y;
+        x = e.offsetX;
+        y = e.offsetY;
+        draw({ x: x, y: y });
     }, false);
 }
 
@@ -33,36 +42,34 @@ function init() {
     drawAll();
 }
 
+// 表单提交【临时】
 function mySubmit(type) {
     var formData = new FormData(form);
     if (type.value == "save" && saveValidation(formData)) {
         doSave(formData);
         form.reset();
-        mapContext.clearRect(0, 0, map.width, map.height);
-        thumbnailContext.clearRect(0, 0, thumbnail.width, thumbnail.height);
+        clear();
         choose = null;
     } else if (type.value == "delete" && deleteValidation(formData) && window.confirm("是否删除选中的设备？")) {
         shapes.splice(choose, 1);
         form.reset();
-        mapContext.clearRect(0, 0, map.width, map.height);
-        thumbnailContext.clearRect(0, 0, thumbnail.width, thumbnail.height);
+        clear();
         choose = null;
     } else if (type.value == "deleteLast" && window.confirm("是否删除上次添加的设备？")) {
         shapes.pop();
         form.reset();
-        mapContext.clearRect(0, 0, map.width, map.height);
-        thumbnailContext.clearRect(0, 0, thumbnail.width, thumbnail.height);
+        clear();
         choose = null;
     } else if (type.value == "deleteAll" && window.confirm("是否删除所有设备？")) {
         shapes = [];
         form.reset();
-        mapContext.clearRect(0, 0, map.width, map.height);
-        thumbnailContext.clearRect(0, 0, thumbnail.width, thumbnail.height);
+        clear();
         choose = null;
     }
     init();
 }
 
+// 表单提交校验【临时】
 function saveValidation(formData) {
     if (isEmpty(formData.get("id"))) {
         window.alert("请输入设备编号");
@@ -102,12 +109,12 @@ function saveValidation(formData) {
     return false;
 }
 
+// 搜索设备
 function search() {
     for (var i = 0; i < shapes.length; i++) {
         if (shapes[i]["id"] == searchId.value) {
             choose = i;
-            mapContext.clearRect(0, 0, map.width, map.height);
-            thumbnailContext.clearRect(0, 0, thumbnail.width, thumbnail.height);
+            clear();
             init();
             form.children[0].value = shapes[i]["id"];
             form.children[1].value = shapes[i]["name"];
@@ -120,13 +127,13 @@ function search() {
         }
     }
     choose = null;
-    mapContext.clearRect(0, 0, map.width, map.height);
-    thumbnailContext.clearRect(0, 0, thumbnail.width, thumbnail.height);
+    clear();
     init();
     form.reset();
     window.alert("没有此编号的设备");
 }
 
+// 导入设备校验【临时】
 function importValidation(data, num) {
     if (isEmpty(data["id"])) {
         window.alert("第" + num + "个！请输入设备编号");
@@ -166,6 +173,7 @@ function importValidation(data, num) {
     return false;
 }
 
+// 删除设备【临时】
 function deleteValidation(formData) {
     if (choose == null) {
         window.alert("请选中一个设备");
@@ -174,6 +182,7 @@ function deleteValidation(formData) {
     return true;
 }
 
+// 保存｜更新设备【临时】
 function doSave(formData) {
     var newShape = new Object();
     newShape["id"] = formData.get("id");
@@ -195,6 +204,7 @@ function doSave(formData) {
     // console.log("json:" + dataJSON);
 }
 
+// 导入设备【临时】
 function importShapes() {
     try {
         var jsonObj = JSON.parse(mapJson.value);
@@ -208,40 +218,32 @@ function importShapes() {
     } catch (e) {
         window.alert(e);
     } finally {
-        mapContext.clearRect(0, 0, map.width, map.height);
-        thumbnailContext.clearRect(0, 0, thumbnail.width, thumbnail.height);
+        clear();
         choose = null;
         init();
     }
 }
 
+// 画布放大
 function bigger() {
     if (per < 100) {
         width += 10 * ((maxWidth - minWidth) / 100);
         height += 10 * ((maxHeight - minHeight) / 100);
         per += 10;
-        mapContext.clearRect(0, 0, map.width, map.height);
-        thumbnailContext.clearRect(0, 0, thumbnail.width, thumbnail.height);
+        clear();
         init();
     }
 }
 
+// 画布缩小
 function smaller() {
     if (per > 0) {
         width -= 10 * ((maxWidth - minWidth) / 100);
         height -= 10 * ((maxHeight - minHeight) / 100);
         per -= 10;
-        mapContext.clearRect(0, 0, map.width, map.height);
-        thumbnailContext.clearRect(0, 0, thumbnail.width, thumbnail.height);
+        clear();
         init();
     }
-}
-
-function getEventPosition(ev) {
-    var x, y;
-    x = ev.offsetX;
-    y = ev.offsetY;
-    return { x: x, y: y };
 }
 
 function draw(p) {
@@ -250,8 +252,7 @@ function draw(p) {
 
     mapContext.strokeStyle = "black";
     thumbnailContext.strokeStyle = "black";
-    mapContext.clearRect(0, 0, map.width, map.height);
-    thumbnailContext.clearRect(0, 0, thumbnail.width, thumbnail.height);
+    clear();
     shapes.forEach(function (v, i) {
         mapContext.beginPath();
         mapContext.rect(v.coordX * multiple, v.coordY * multiple, v.width * multiple, v.height * multiple);
@@ -310,17 +311,15 @@ function drawAll() {
             thumbnailContext.stroke();
         }
     }
-
-    // thumbnailContext.beginPath();
-    // thumbnailContext.strokeStyle = "blue";
-    // thumbnailContext.strokeRect(
-    //     0,
-    //     0,
-    //     180,
-    //     120
-    // );
 }
 
+function clear(){
+    mapContext.clearRect(0, 0, map.width, map.height);
+    thumbnailContext.clearRect(0, 0, thumbnail.width, thumbnail.height);
+}
+
+
+// 工具方法：判断字符串是否为空
 function isEmpty(str) {
     if (str == null || str.trim() == "") {
         return true;
