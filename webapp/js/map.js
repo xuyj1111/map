@@ -7,13 +7,13 @@ var form = document.getElementsByClassName("info")[0].getElementsByTagName("form
 var mapJson = document.getElementsByClassName("import")[0].getElementsByTagName("input")[0];
 var searchId = document.getElementsByClassName("search")[0].getElementsByTagName("form")[0].getElementsByTagName("input")[0];
 
-var minWidth = 400;
-var minHeight = 300;
-var maxWidth = 2400;
-var maxHeight = 1800;
-var width = 800;
-var height = 600;
-var per = 20;
+var minWidth = 580;
+var minHeight = 380;
+var maxWidth = 3480;
+var maxHeight = 2280;
+var width = 870;
+var height = 570;
+var per = 10;
 var shapes = [];
 var choose;
 
@@ -89,12 +89,12 @@ function saveValidation(formData) {
                 return false;
             }
         }
-        if (parseInt(formData.get("coordX")) + parseInt(formData.get("width")) > 400) {
-            window.alert("坐标x加宽度不可超过400");
+        if (parseInt(formData.get("coordX")) + parseInt(formData.get("width")) > 580) {
+            window.alert("坐标x加宽度不可超过580");
             return false;
         }
-        if (parseInt(formData.get("coordY")) + parseInt(formData.get("height")) > 300) {
-            window.alert("坐标y加高度不可超过300");
+        if (parseInt(formData.get("coordY")) + parseInt(formData.get("height")) > 380) {
+            window.alert("坐标y加高度不可超过380");
             return false;
         }
         return true;
@@ -153,12 +153,12 @@ function importValidation(data, num) {
                 return false;
             }
         }
-        if (parseInt(data["coordX"]) + parseInt(data["width"]) > 400) {
-            window.alert("编号[" + data["id"] + "] 坐标x加宽度不可超过400");
+        if (parseInt(data["coordX"]) + parseInt(data["width"]) > 580) {
+            window.alert("编号[" + data["id"] + "] 坐标x加宽度不可超过580");
             return false;
         }
-        if (parseInt(data["coordY"]) + parseInt(data["height"]) > 300) {
-            window.alert("编号[" + data["id"] + "] 坐标y加高度不可超过300");
+        if (parseInt(data["coordY"]) + parseInt(data["height"]) > 380) {
+            window.alert("编号[" + data["id"] + "] 坐标y加高度不可超过380");
             return false;
         }
         return true;
@@ -221,6 +221,7 @@ function bigger() {
         height += 10 * ((maxHeight - minHeight) / 100);
         per += 10;
         mapContext.clearRect(0, 0, map.width, map.height);
+        thumbnailContext.clearRect(0, 0, thumbnail.width, thumbnail.height);
         init();
     }
 }
@@ -231,6 +232,7 @@ function smaller() {
         height -= 10 * ((maxHeight - minHeight) / 100);
         per -= 10;
         mapContext.clearRect(0, 0, map.width, map.height);
+        thumbnailContext.clearRect(0, 0, thumbnail.width, thumbnail.height);
         init();
     }
 }
@@ -244,17 +246,17 @@ function getEventPosition(ev) {
 
 function draw(p) {
     var multiple = (1.0 + 0.05 * per);
-    var formData = new FormData(form);
     choose = null;
 
     mapContext.strokeStyle = "black";
+    thumbnailContext.strokeStyle = "black";
     mapContext.clearRect(0, 0, map.width, map.height);
     thumbnailContext.clearRect(0, 0, thumbnail.width, thumbnail.height);
     shapes.forEach(function (v, i) {
         mapContext.beginPath();
         mapContext.rect(v.coordX * multiple, v.coordY * multiple, v.width * multiple, v.height * multiple);
         thumbnailContext.beginPath();
-        thumbnailContext.rect(v.coordX * 0.45, v.coordY * 0.4, v.width * 0.45, v.height * 0.4);
+        thumbnailContext.rect(v.coordX * 0.35, v.coordY * 0.35, v.width * 0.35, v.height * 0.35);
         if (p && mapContext.isPointInPath(p.x, p.y)) {
             choose = i;
             mapContext.fillStyle = "black";
@@ -293,10 +295,10 @@ function drawAll() {
             shapes[i]["height"] * multiple
         );
         thumbnailContext.rect(
-            shapes[i]["coordX"] * 0.45,
-            shapes[i]["coordY"] * 0.4,
-            shapes[i]["width"] * 0.45,
-            shapes[i]["height"] * 0.4
+            shapes[i]["coordX"] * 0.35,
+            shapes[i]["coordY"] * 0.35,
+            shapes[i]["width"] * 0.35,
+            shapes[i]["height"] * 0.35
         );
         if (i == choose) {
             mapContext.fillStyle = "black";
