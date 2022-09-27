@@ -85,12 +85,6 @@ function saveValidation(formData) {
         window.alert("请输入高度");
     } else {
         for (var i = 0; i < shapes.length; i++) {
-            if (shapes[i]["id"] == formData.get("id") && choose == null) {
-                if (shapes[i]["tag"] == formData.get("tag") || (isEmpty(shapes[i]["tag"]) && isEmpty(formData.get("tag")))) {
-                    window.alert("该设备编号和工位号已存在, 编号[" + formData.get("id") + "] 工位号[" + formData.get("tag") + "]");
-                    return false;
-                }
-            }
             if (!isEmpty(formData.get("tag")) && shapes[i]["tag"] == formData.get("tag") && choose == null) {
                 window.alert("该工位号[" + formData.get("tag") + "]已存在");
                 return false;
@@ -149,13 +143,7 @@ function importValidation(data, num) {
         window.alert("第" + num + "个！请输入高度");
     } else {
         for (var i = 0; i < shapes.length; i++) {
-            if (shapes[i]["id"] == data["id"] && choose == null) {
-                if (shapes[i]["tag"] == data["tag"] || (isEmpty(shapes[i]["tag"]) && isEmpty(data["tag"]))) {
-                    window.alert("该设备编号和工位号已存在, 编号[" + data["id"] + "] 工位号[" + data["tag"] + "]");
-                    return false;
-                }
-            }
-            if (!isEmpty(data["tag"]) && shapes[i]["tag"] == data["tag"] && choose == null) {
+            if (!isEmpty(data["tag"]) && shapes[i]["tag"] == data["tag"]) {
                 window.alert("该工位号[" + data["tag"] + "]已存在");
                 return false;
             }
