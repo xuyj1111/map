@@ -43,21 +43,48 @@
       <!-- 信息区域 -->
       <div class="info">
         <form>
-          <input type="text" name="id" placeholder="设备编号" />
-          <input type="text" name="name" placeholder="设备名" />
+          <input class="txt" type="text" name="id" placeholder="设备编号" />
+          <input class="txt" type="text" name="name" placeholder="设备名" />
           <input
+            class="txt"
             type="text"
             name="tag"
             placeholder="工位号(除assy, 其他不用填)"
           />
-          <input type="text" name="coordX" placeholder="坐标x" />
-          <input type="text" name="coordY" placeholder="坐标y" />
-          <input type="text" name="width" placeholder="宽度" />
-          <input type="text" name="height" placeholder="高度" />
-          <input type="button" value="save" onclick="mySubmit(this)" />
-          <input type="button" value="delete" onclick="mySubmit(this)" />
-          <input type="button" value="deleteLast" onclick="mySubmit(this)" />
-          <input type="button" value="deleteAll" onclick="mySubmit(this)" />
+          <input class="txt" type="text" name="coordX" placeholder="坐标x" />
+          <input class="txt" type="text" name="coordY" placeholder="坐标y" />
+          <input class="txt" type="text" name="width" placeholder="宽度" />
+          <input class="txt" type="text" name="height" placeholder="高度" />
+          <br />
+          传送带：
+          左右<input type="radio" name="direction" onclick="cancelChecked()" value="x"/>
+          上下<input type="radio" name="direction" onclick="cancelChecked()" value="y"/>
+          <br />
+          <input
+            class="but"
+            type="button"
+            value="save"
+            onclick="mySubmit(this)"
+          />
+          <input
+            class="but"
+            type="button"
+            value="delete"
+            onclick="mySubmit(this)"
+          />
+          <br />
+          <input
+            class="but"
+            type="button"
+            value="deleteLast"
+            onclick="mySubmit(this)"
+          />
+          <input
+            class="but"
+            type="button"
+            value="deleteAll"
+            onclick="mySubmit(this)"
+          />
         </form>
       </div>
 

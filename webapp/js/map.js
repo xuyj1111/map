@@ -22,6 +22,9 @@ var per = 10;
 var shapes = [];
 // 选中设备的下标，未选中为null
 var choose;
+// 传送带flag
+var xFlag = false;
+var yFlag = false;
 
 window.onload = init();
 
@@ -110,13 +113,17 @@ function search() {
             choose = i;
             clear();
             init();
-            form.children[0].value = shapes[i]["id"];
-            form.children[1].value = shapes[i]["name"];
-            form.children[2].value = isEmpty(shapes[i]["tag"]) ? null : shapes[i]["tag"];
-            form.children[3].value = shapes[i]["coordX"];
-            form.children[4].value = shapes[i]["coordY"];
-            form.children[5].value = shapes[i]["width"];
-            form.children[6].value = shapes[i]["height"];
+            form.getElementsByTagName("input")[0].value = shapes[i]["id"];
+            form.getElementsByTagName("input")[1].value = shapes[i]["name"];
+            form.getElementsByTagName("input")[2].value = isEmpty(shapes[i]["tag"]) ? null : shapes[i]["tag"];
+            form.getElementsByTagName("input")[3].value = shapes[i]["coordX"];
+            form.getElementsByTagName("input")[4].value = shapes[i]["coordY"];
+            form.getElementsByTagName("input")[5].value = shapes[i]["width"];
+            form.getElementsByTagName("input")[6].value = shapes[i]["height"];
+            form.getElementsByTagName("input")[7].checked = shapes[i]["direction"] == "x";
+            form.getElementsByTagName("input")[8].checked = shapes[i]["direction"] == "y";
+            xFlag = shapes[i]["direction"] == "x";
+            yFlag = shapes[i]["direction"] == "y";
             return;
         }
     }
@@ -130,17 +137,17 @@ function search() {
 // 导入设备校验【临时】
 function importValidation(data, num) {
     if (isEmpty(data["id"])) {
-        window.alert("第" + num + "个！请输入设备编号");
+        window.alert("第" + num + "个! 请输入设备编号");
     } else if (isEmpty(data["name"])) {
-        window.alert("第" + num + "个！请输入设备名");
+        window.alert("第" + num + "个! 请输入设备名");
     } else if (isEmpty(data["coordX"])) {
-        window.alert("第" + num + "个！请输入坐标x");
+        window.alert("第" + num + "个! 请输入坐标x");
     } else if (isEmpty(data["coordY"])) {
-        window.alert("第" + num + "个！请输入坐标y");
+        window.alert("第" + num + "个! 请输入坐标y");
     } else if (isEmpty(data["width"])) {
-        window.alert("第" + num + "个！请输入宽度");
+        window.alert("第" + num + "个! 请输入宽度");
     } else if (isEmpty(data["height"])) {
-        window.alert("第" + num + "个！请输入高度");
+        window.alert("第" + num + "个! 请输入高度");
     } else {
         for (var i = 0; i < shapes.length; i++) {
             if (!isEmpty(data["tag"]) && shapes[i]["tag"] == data["tag"]) {
@@ -182,6 +189,7 @@ function doSave(formData) {
     newShape["coordY"] = formData.get("coordY");
     newShape["width"] = formData.get("width");
     newShape["height"] = formData.get("height");
+    newShape["direction"] = formData.get("direction");
     if (choose == null) {
         shapes[shapes.length] = newShape;
     } else {
@@ -190,6 +198,25 @@ function doSave(formData) {
     console.log(shapes);
     // var dataJSON = JSON.stringify(shapes);
     // console.log("json:" + dataJSON);
+}
+
+// 传送带单选框可取消【临时】
+function cancelChecked() {
+    var xDirection = form.getElementsByTagName("input")[7];
+    var yDirection = form.getElementsByTagName("input")[8];
+    if (xDirection.checked) {
+        yFlag = false;
+        if (xFlag) {
+            xDirection.checked = false;
+        }
+        xFlag = xDirection.checked;
+    } else {
+        xFlag = false;
+        if (yFlag) {
+            yDirection.checked = false;
+        }
+        yFlag = yDirection.checked;
+    }
 }
 
 // 导入设备【临时】
@@ -253,14 +280,42 @@ function draw(p) {
             thumbnailContext.fillStyle = "black";
             thumbnailContext.fill();
 
-            form.children[0].value = shapes[i]["id"];
-            form.children[1].value = shapes[i]["name"];
-            form.children[2].value = isEmpty(shapes[i]["tag"]) ? null : shapes[i]["tag"];
-            form.children[3].value = shapes[i]["coordX"];
-            form.children[4].value = shapes[i]["coordY"];
-            form.children[5].value = shapes[i]["width"];
-            form.children[6].value = shapes[i]["height"];
+            form.getElementsByTagName("input")[0].value = shapes[i]["id"];
+            form.getElementsByTagName("input")[1].value = shapes[i]["name"];
+            form.getElementsByTagName("input")[2].value = isEmpty(shapes[i]["tag"]) ? null : shapes[i]["tag"];
+            form.getElementsByTagName("input")[3].value = shapes[i]["coordX"];
+            form.getElementsByTagName("input")[4].value = shapes[i]["coordY"];
+            form.getElementsByTagName("input")[5].value = shapes[i]["width"];
+            form.getElementsByTagName("input")[6].value = shapes[i]["height"];
+            form.getElementsByTagName("input")[7].checked = shapes[i]["direction"] == "x";
+            form.getElementsByTagName("input")[8].checked = shapes[i]["direction"] == "y";
+            xFlag = shapes[i]["direction"] == "x";
+            yFlag = shapes[i]["direction"] == "y";
         } else {
+            //传送带条纹
+            if (shapes[i]["direction"] == "x") {
+                for (var j = 1; j < shapes[i]["width"] * multiple / 5; j++) {
+                    mapContext.strokeStyle = "black";
+                    mapContext.moveTo(shapes[i]["coordX"] * multiple + (j * 5), shapes[i]["coordY"] * multiple);
+                    mapContext.lineTo(shapes[i]["coordX"] * multiple + (j * 5), shapes[i]["coordY"] * multiple + shapes[i]["height"] * multiple);
+                }
+                for (var j = 1; j < shapes[i]["width"] * 0.35 / 5; j++) {
+                    thumbnailContext.strokeStyle = "black";
+                    thumbnailContext.moveTo(shapes[i]["coordX"] * 0.35 + (j * 5), shapes[i]["coordY"] * 0.35);
+                    thumbnailContext.lineTo(shapes[i]["coordX"] * 0.35 + (j * 5), shapes[i]["coordY"] * 0.35 + shapes[i]["height"] * 0.35);
+                }
+            } else if (shapes[i]["direction"] == "y") {
+                for (var j = 1; j < shapes[i]["height"] * multiple / 5; j++) {
+                    mapContext.strokeStyle = "black";
+                    mapContext.moveTo(shapes[i]["coordX"] * multiple, shapes[i]["coordY"] * multiple + (j * 5));
+                    mapContext.lineTo(shapes[i]["coordX"] * multiple + shapes[i]["width"] * multiple, shapes[i]["coordY"] * multiple + (j * 5));
+                }
+                for (var j = 1; j < shapes[i]["height"] * 0.35 / 5; j++) {
+                    thumbnailContext.strokeStyle = "black";
+                    thumbnailContext.moveTo(shapes[i]["coordX"] * 0.35, shapes[i]["coordY"] * 0.35 + (j * 5));
+                    thumbnailContext.lineTo(shapes[i]["coordX"] * 0.35 + shapes[i]["width"] * 0.35, shapes[i]["coordY"] * 0.35 + (j * 5));
+                }
+            }
             mapContext.stroke();
             thumbnailContext.stroke();
         }
@@ -295,13 +350,37 @@ function drawAll() {
             thumbnailContext.fillStyle = "black";
             thumbnailContext.fill();
         } else {
+            //传送带条纹
+            if (shapes[i]["direction"] == "x") {
+                for (var j = 1; j < shapes[i]["width"] * multiple / 5; j++) {
+                    mapContext.strokeStyle = "black";
+                    mapContext.moveTo(shapes[i]["coordX"] * multiple + (j * 5), shapes[i]["coordY"] * multiple);
+                    mapContext.lineTo(shapes[i]["coordX"] * multiple + (j * 5), shapes[i]["coordY"] * multiple + shapes[i]["height"] * multiple);
+                }
+                for (var j = 1; j < shapes[i]["width"] * 0.35 / 5; j++) {
+                    thumbnailContext.strokeStyle = "black";
+                    thumbnailContext.moveTo(shapes[i]["coordX"] * 0.35 + (j * 5), shapes[i]["coordY"] * 0.35);
+                    thumbnailContext.lineTo(shapes[i]["coordX"] * 0.35 + (j * 5), shapes[i]["coordY"] * 0.35 + shapes[i]["height"] * 0.35);
+                }
+            } else if (shapes[i]["direction"] == "y") {
+                for (var j = 1; j < shapes[i]["height"] * multiple / 5; j++) {
+                    mapContext.strokeStyle = "black";
+                    mapContext.moveTo(shapes[i]["coordX"] * multiple, shapes[i]["coordY"] * multiple + (j * 5));
+                    mapContext.lineTo(shapes[i]["coordX"] * multiple + shapes[i]["width"] * multiple, shapes[i]["coordY"] * multiple + (j * 5));
+                }
+                for (var j = 1; j < shapes[i]["height"] * 0.35 / 5; j++) {
+                    thumbnailContext.strokeStyle = "black";
+                    thumbnailContext.moveTo(shapes[i]["coordX"] * 0.35, shapes[i]["coordY"] * 0.35 + (j * 5));
+                    thumbnailContext.lineTo(shapes[i]["coordX"] * 0.35 + shapes[i]["width"] * 0.35, shapes[i]["coordY"] * 0.35 + (j * 5));
+                }
+            }
             mapContext.stroke();
             thumbnailContext.stroke();
         }
     }
 }
 
-function clear(){
+function clear() {
     mapContext.clearRect(0, 0, map.width, map.height);
     thumbnailContext.clearRect(0, 0, thumbnail.width, thumbnail.height);
 }

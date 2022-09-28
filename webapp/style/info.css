@@ -8,12 +8,14 @@
     margin: 0 auto;
 
     width: 200px;
-    height: 250px;
+    height: 290px;
     background: white;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
 }
 
+.info form .txt {
+    width: 200px;
+}
 
+.info form .but {
+    width: 200px;
+}
